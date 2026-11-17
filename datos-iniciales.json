@@ -1,0 +1,265 @@
+{
+ "descripcion": "Configuración inicial de Campus Wortev (sin clientes ni reservas)",
+ "config": {
+  "main": {
+   "menu": [
+    {
+     "c": "Coffee breaks",
+     "d": "Café, té, agua, refrescos y galletas.",
+     "k": "cb1",
+     "n": "Coffee Break Esencial",
+     "p": 100
+    },
+    {
+     "c": "Coffee breaks",
+     "d": "Agua, café, té, refrescos, yogur con frutos rojos, mini pan dulce y galletas.",
+     "k": "cb2",
+     "n": "Coffee Break Plus",
+     "p": 300
+    },
+    {
+     "c": "Coffee breaks",
+     "d": "Agua, café, té, refrescos, yogur con frutos rojos, hojaldritas, galletas, crudités, chips, cacahuates y frutos secos.",
+     "k": "cb3",
+     "n": "Coffee Break Pro",
+     "p": 400
+    },
+    {
+     "c": "Coffee breaks",
+     "d": "Agua, café, té, 2 mimosas por persona, yogur con frutos rojos, hojaldritas, galletas, crudités, chips, cacahuates y frutos secos.",
+     "k": "cb4",
+     "n": "Coffee Break Premium",
+     "p": 520
+    },
+    {
+     "c": "Coffee breaks",
+     "d": "Agua, café, té con mini chapatitas healthy con pan de masa madre, montados de atún con pepino, crudités y humus.",
+     "k": "cb5",
+     "n": "Coffee Break Saludable",
+     "p": 300
+    },
+    {
+     "c": "Desayunos y brunch",
+     "d": "Huevos al gusto: con jamón, tocino, rancheros, a la mexicana o a la cazuela. Incluye agua de sabor o jugo.",
+     "k": "d1",
+     "n": "Desayuno 1",
+     "p": 520
+    },
+    {
+     "c": "Desayunos y brunch",
+     "d": "Chilaquiles en salsa roja o verde. Incluye agua de sabor o jugo.",
+     "k": "d2",
+     "n": "Desayuno 2",
+     "p": 520
+    },
+    {
+     "c": "Desayunos y brunch",
+     "d": "Omelette de jamón y queso, de espinaca o de jitomate con queso panela; o enchiladas (rojas o verdes); o hotcakes estilo americano. Incluye agua de sabor o jugo.",
+     "k": "d3",
+     "n": "Desayuno 3",
+     "p": 520
+    },
+    {
+     "c": "Desayunos y brunch",
+     "d": "Fruta de temporada, avocado toast, french toast, una mimosa, agua, café o té.",
+     "k": "d4",
+     "n": "Brunch",
+     "p": 520
+    },
+    {
+     "c": "Comidas",
+     "d": "A elegir entre: mini hamburguesas, hot dogs, sándwiches, hot cakes o chili beans.",
+     "k": "c1",
+     "n": "Barra Americana",
+     "p": 420
+    },
+    {
+     "c": "Comidas",
+     "d": "Mini sopes, mini flautas ahogadas, mini pambazos, mini quesadillas y aguas de sabor.",
+     "k": "c2",
+     "n": "Antojitos mexicanos",
+     "p": 520
+    },
+    {
+     "c": "Comidas",
+     "d": "Ensalada, pizza y pasta.",
+     "k": "c3",
+     "n": "Barra italiana",
+     "p": 630
+    },
+    {
+     "c": "Comidas",
+     "d": "Sopa de zanahoria con jengibre, medallón de pollo marinado con yogurt griego y hojas de menta sobre ensalada griega, pastel de chocolate sin harinas y nuez.",
+     "k": "c4",
+     "n": "Menú Healthy",
+     "p": 500
+    },
+    {
+     "c": "Comidas",
+     "d": "Frijoles, arroz, tortillas, salsa y agua de sabor. 3 guisados a elección del cliente: chicharrón en salsa verde o roja, papas con chorizo, tinga, campechanos, alambre, rajas poblanas con pollo y crema.",
+     "k": "c5",
+     "n": "Taquiza",
+     "p": 550
+    },
+    {
+     "c": "Complementos",
+     "d": "Copa de vino para acompañamiento de alimentos.",
+     "k": "x1",
+     "n": "Copa de vino",
+     "p": 150
+    }
+   ],
+   "offices": [
+    {
+     "b": "PB Núcleo 1",
+     "dp": 3,
+     "hs": 8,
+     "m2": 10,
+     "n": "Ámbar",
+     "p": 5
+    },
+    {
+     "b": "PB Núcleo 2",
+     "dp": 3,
+     "hs": 8,
+     "m2": 7,
+     "n": "Arcilla",
+     "p": 4
+    },
+    {
+     "b": "PB Núcleo 3",
+     "dp": 3,
+     "hs": 8,
+     "m2": 11,
+     "n": "Arena",
+     "p": 4
+    },
+    {
+     "b": "PB Núcleo 4",
+     "dp": 3,
+     "hs": 6,
+     "m2": null,
+     "n": "Caliza",
+     "p": 5
+    },
+    {
+     "b": "PB Núcleo 5",
+     "dp": 3,
+     "hs": 6,
+     "m2": null,
+     "n": "Cobre",
+     "p": 6
+    },
+    {
+     "b": "Piso 1 Núcleo 1",
+     "dp": 3,
+     "hs": 8,
+     "m2": 10,
+     "n": "Ébano",
+     "p": 6
+    },
+    {
+     "b": "Piso 1 Núcleo 2",
+     "dp": 3,
+     "hs": 8,
+     "m2": 8,
+     "n": "Grafito",
+     "p": 5
+    },
+    {
+     "b": "Piso 1 Núcleo 3",
+     "dp": 3,
+     "hs": 8,
+     "m2": 19,
+     "n": "Latón",
+     "p": 10
+    },
+    {
+     "b": "Piso 1 Núcleo 4",
+     "dp": 3,
+     "hs": 8,
+     "m2": 8,
+     "n": "Lino",
+     "p": 4
+    },
+    {
+     "b": "Piso 1 Núcleo 5",
+     "dp": 3,
+     "hs": 8,
+     "m2": 10,
+     "n": "Mármol",
+     "p": 4
+    },
+    {
+     "b": "Piso 2 Núcleo 1",
+     "dp": 20,
+     "hs": 30,
+     "m2": 106,
+     "n": "Onix",
+     "p": 30
+    },
+    {
+     "b": "Piso 2 Casa 1",
+     "dp": 16,
+     "hs": 24,
+     "m2": null,
+     "n": "Sae",
+     "p": 30
+    }
+   ],
+   "plans": {
+    "All Inclusive": 9900,
+    "Campus": 3500,
+    "Daypass": 250,
+    "Nómada": 0,
+    "WeekPass": 990
+   },
+   "spaces": {
+    "Anturio": [
+     490,
+     390
+    ],
+    "Bambú": [
+     4000,
+     3600
+    ],
+    "Cítricos": [
+     3000,
+     2700
+    ],
+    "Filodendro": [
+     490,
+     390
+    ],
+    "Jacaranda": [
+     14000,
+     12600
+    ],
+    "Monstera": [
+     690,
+     552
+    ],
+    "Orquídea": [
+     490,
+     390
+    ],
+    "Potus": [
+     490,
+     390
+    ],
+    "Salón comedor": [
+     3000,
+     2700
+    ],
+    "Suculenta": [
+     1225,
+     980
+    ]
+   },
+   "svc": {
+    "Estudio con grabación de audio": 3000,
+    "Solo estudio": 1800
+   }
+  }
+ }
+}

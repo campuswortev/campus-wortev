@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Rol de la persona que hace la petición: pendiente | viewer | editor | owner | none
+    function rol() {
+      return request.auth == null ? 'none'
+        : (exists(/databases/$(database)/documents/perfiles/$(request.auth.uid))
+            ? get(/databases/$(database)/documents/perfiles/$(request.auth.uid)).data.rol : 'none');
+    }
+    function lee()    { return rol() in ['viewer', 'editor', 'owner']; }
+    function escribe(){ return rol() in ['editor', 'owner']; }
+    // Admin del panel = dueño, o editor autorizado por el dueño en config/admins
+    function admin() {
+      return rol() == 'owner'
+        || (rol() == 'editor'
+            && exists(/databases/$(database)/documents/config/admins)
+            && request.auth.uid in get(/databases/$(database)/documents/config/admins).data.ids);
+    }
+
+    // Perfiles: cada persona crea el suyo como "pendiente"; solo el dueño cambia roles
+    match /perfiles/{uid} {
+      allow read:   if request.auth != null && (request.auth.uid == uid || lee());
+      allow create: if request.auth != null && request.auth.uid == uid
+                    && request.resource.data.rol == 'pendiente';
+      allow update: if rol() == 'owner';
+      allow delete: if false;
+    }
+
+    // Configuración (precios, espacios, oficinas…): la cambia un admin; la lista de admins, solo el dueño
+    match /config/{id} {
+      allow read:  if lee();
+      allow write: if id == 'admins' ? rol() == 'owner' : admin();
+    }
+
+    // Equipo staff: lo cambia un admin
+    match /staff/{id} {
+      allow read:  if lee();
+      allow write: if admin();
+    }
+
+    // Datos de operación: los capturan editores y dueño
+    match /{col}/{id} {
+      allow read:  if lee() && col in ['members', 'bookings', 'companies', 'quotes', 'balances'];
+      allow write: if escribe() && col in ['members', 'bookings', 'companies', 'quotes', 'balances'];
+    }
+  }
+}
