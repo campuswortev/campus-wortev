@@ -5,7 +5,7 @@
   var C = window.CW_FIREBASE || {};
   var auth, fs, USER = null, PERFIL = null, ov = null, NEWNAME = "", busy = false;
   var COLS = ["members", "bookings", "companies", "staff", "quotes", "balances", "config"];
-  var ROLES = { pendiente: "Pendiente (sin acceso)", viewer: "Solo consulta", editor: "Editor (opera la app)", owner: "Dueño" };
+  var ROLES = { pendiente: "Pendiente (sin acceso)", viewer: "Solo consulta", editor: "Editor (opera la app)", owner: "Dueño", bloqueado: "Acceso revocado" };
 
   var css = "position:fixed;inset:0;z-index:9999;background:var(--bg,#FFF8F2);display:flex;align-items:flex-start;justify-content:center;padding:24px 16px;overflow:auto;font-family:Montserrat,system-ui,sans-serif;color:var(--tx,#072033)";
   var box = "background:#fff;border:1px solid var(--bd,#E6D8C7);border-radius:12px;padding:24px;max-width:420px;width:100%;box-shadow:0 8px 30px rgba(0,0,0,.08);margin:auto";
@@ -74,6 +74,12 @@
       USER = u; PERFIL = await loadPerfil(u);
     } catch (e) { busy = false; return fatal("No se pudo leer tu perfil: " + errTxt(e) + " ¿Ya publicaste las reglas de Firestore?"); }
     busy = false;
+    if (PERFIL.rol === "bloqueado") {
+      var ob = show('<h3 style="margin:0 0 8px">Acceso revocado</h3><p style="font-size:14px;line-height:1.5">El acceso de tu cuenta (' + esc(u.email) + ') a Campus Wortev fue revocado. Si crees que es un error, comunícate con la persona administradora.</p>' +
+        '<button id="cwout" style="' + btn + '">Cerrar sesión</button>');
+      ob.querySelector("#cwout").onclick = function () { auth.signOut().then(function () { location.reload(); }); };
+      return;
+    }
     if (PERFIL.rol === "pendiente") {
       var o = show('<h3 style="margin:0 0 8px">Cuenta pendiente de aprobación</h3><p style="font-size:14px;line-height:1.5">Tu cuenta (' + esc(u.email) + ') ya existe, pero la persona administradora de Campus Wortev aún debe darte acceso.</p>' +
         '<button id="cwck" style="' + btn + '">Revisar de nuevo</button><button id="cwout" style="' + btn2 + '">Cerrar sesión</button>');
@@ -116,11 +122,11 @@
     snap.forEach(function (d) { L.push(Object.assign({ id: d.id }, d.data())); });
     L.sort(function (a, b) { return (a.creado || "") < (b.creado || "") ? -1 : 1; });
     var o = show('<div style="display:flex;align-items:center"><h3 style="margin:0">Equipo y respaldo</h3><button id="cwx" style="margin-left:auto;padding:6px 12px;border:1px solid var(--bd,#E6D8C7);border-radius:6px;background:#fff;cursor:pointer;font:inherit">Cerrar</button></div>' +
-      '<p style="font-size:13px;color:var(--mu,#5C6770)">Asigna a cada persona su rol. <b>Pendiente</b>: no ve nada. <b>Solo consulta</b>: ve todo y no cambia nada. <b>Editor</b>: opera la app. <b>Dueño</b>: todo, incluido Admin y esta pantalla.</p>' +
-      '<div style="overflow:auto"><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="text-align:left"><th style="padding:6px">Nombre</th><th>Correo</th><th>Rol</th></tr></thead><tbody>' +
+      '<p style="font-size:13px;color:var(--mu,#5C6770)">Asigna a cada persona su rol. <b>Pendiente</b>: no ve nada. <b>Acceso revocado</b>: bloqueada, no puede volver a pedir acceso. <b>Solo consulta</b>: ve todo y no cambia nada. <b>Editor</b>: opera la app. <b>Dueño</b>: todo, incluido Admin y esta pantalla.</p>' +
+      '<div style="overflow:auto"><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="text-align:left"><th style="padding:6px">Nombre</th><th>Correo</th><th>Rol</th><th></th></tr></thead><tbody>' +
       L.map(function (p) {
         return '<tr style="border-top:1px solid var(--bd,#E6D8C7)"><td style="padding:6px">' + esc(p.nombre) + '</td><td>' + esc(p.email) + '</td><td><select data-id="' + esc(p.id) + '" style="font:inherit;padding:4px">' +
-          Object.keys(ROLES).map(function (k) { return '<option value="' + k + '"' + (k === p.rol ? " selected" : "") + ">" + ROLES[k] + "</option>"; }).join("") + "</select></td></tr>";
+          Object.keys(ROLES).map(function (k) { return '<option value="' + k + '"' + (k === p.rol ? " selected" : "") + ">" + ROLES[k] + "</option>"; }).join("") + "</select></td><td>" + (p.id === USER.uid ? "" : (p.rol === "bloqueado" ? '<button data-rst="' + esc(p.id) + '" style="font:inherit;padding:4px 8px;border:1px solid var(--bd,#E6D8C7);background:#fff;border-radius:6px;cursor:pointer;margin-right:4px">Restablecer</button>' : '<button data-rev="' + esc(p.id) + '" data-n="' + esc(p.nombre || p.email) + '" style="font:inherit;padding:4px 8px;border:1px solid #B3261E;color:#B3261E;background:#fff;border-radius:6px;cursor:pointer;margin-right:4px">Revocar acceso</button>') + '<button data-del="' + esc(p.id) + '" data-n="' + esc(p.nombre || p.email) + '" style="font:inherit;padding:4px 8px;border:1px solid #B3261E;color:#B3261E;background:#fff;border-radius:6px;cursor:pointer">Quitar</button>') + "</td></tr>";
       }).join("") + '</tbody></table></div><p id="cwm" style="font-size:13px;min-height:18px;margin:8px 0"></p>' +
       '<hr style="border:0;border-top:1px solid var(--bd,#E6D8C7);margin:12px 0"><h4 style="margin:0 0 6px">Respaldo</h4><p style="font-size:13px;color:var(--mu,#5C6770);margin:0 0 6px">Descarga un archivo con todos los datos (miembros, empresas, saldos, reservas, cotizaciones, staff y configuración). Hazlo con regularidad y guárdalo en un lugar privado.</p>' +
       '<button id="cwbk" style="' + btn + '">Descargar respaldo completo (JSON)</button>', true);
@@ -130,7 +136,35 @@
       s.onchange = function () {
         var id = s.getAttribute("data-id");
         if (id === USER.uid && s.value !== "owner" && !confirm("Vas a quitarte el rol de Dueño a ti misma/o. ¿Seguro?")) { s.value = "owner"; return; }
-        fs.collection("perfiles").doc(id).update({ rol: s.value }).then(function () { m.style.color = "#2A5135"; m.textContent = "Guardado."; }).catch(function (e) { m.style.color = "#B3261E"; m.textContent = errTxt(e); });
+        fs.collection("perfiles").doc(id).update({ rol: s.value }).then(function () { if (s.value === "bloqueado") { fs.collection("config").doc("admins").update({ ids: firebase.firestore.FieldValue.arrayRemove(id) }).catch(function () { }); } m.style.color = "#2A5135"; m.textContent = "Guardado."; }).catch(function (e) { m.style.color = "#B3261E"; m.textContent = errTxt(e); });
+      };
+    });
+    async function setRol(id, rol, ok) {
+      try {
+        await fs.collection("perfiles").doc(id).update({ rol: rol });
+        if (rol === "bloqueado") { try { await fs.collection("config").doc("admins").update({ ids: firebase.firestore.FieldValue.arrayRemove(id) }); } catch (e2) { } }
+        m.style.color = "#2A5135"; m.textContent = ok; setTimeout(function () { equipoUI(); }, 600);
+      } catch (e) { m.style.color = "#B3261E"; m.textContent = errTxt(e); }
+    }
+    o.querySelectorAll("button[data-rev]").forEach(function (b) {
+      b.onclick = function () {
+        if (!confirm("¿Revocar el acceso de " + b.getAttribute("data-n") + "? Dejará de ver y editar datos de inmediato. Su cuenta se conserva en la lista y no podrá volver a pedir acceso; tú puedes restablecerla cuando quieras.")) return;
+        setRol(b.getAttribute("data-rev"), "bloqueado", "Acceso revocado.");
+      };
+    });
+    o.querySelectorAll("button[data-rst]").forEach(function (b) {
+      b.onclick = function () { setRol(b.getAttribute("data-rst"), "pendiente", "Restablecida como pendiente. Asígnale un rol si debe volver a entrar."); };
+    });
+    o.querySelectorAll("button[data-del]").forEach(function (b) {
+      b.onclick = async function () {
+        var id = b.getAttribute("data-del");
+        if (!confirm("¿Quitar a " + b.getAttribute("data-n") + "? Perderá el acceso a la app de inmediato. Podrá volver a pedir acceso creando cuenta o entrando de nuevo, y tú decidirás si lo apruebas.")) return;
+        try {
+          await fs.collection("perfiles").doc(id).delete();
+          try { await fs.collection("config").doc("admins").update({ ids: firebase.firestore.FieldValue.arrayRemove(id) }); } catch (e2) { }
+          var tr = b.closest("tr"); if (tr) tr.remove();
+          m.style.color = "#2A5135"; m.textContent = "Acceso quitado.";
+        } catch (e) { m.style.color = "#B3261E"; m.textContent = errTxt(e); }
       };
     });
     o.querySelector("#cwbk").onclick = async function () {
